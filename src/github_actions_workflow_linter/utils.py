@@ -143,7 +143,7 @@ class Settings:
     @staticmethod
     def factory() -> SettingsFromFactory:
         with (
-            importlib.resources.files("bitwarden_workflow_linter")
+            importlib.resources.files("github_actions_workflow_linter")
             .joinpath("default_settings.yaml")
             .open("r", encoding="utf-8") as file
         ):
@@ -161,7 +161,7 @@ class Settings:
 
         if settings["approved_actions_path"] == "default_actions.json":
             with (
-                importlib.resources.files("bitwarden_workflow_linter")
+                importlib.resources.files("github_actions_workflow_linter")
                 .joinpath("default_actions.json")
                 .open("r", encoding="utf-8") as file
             ):

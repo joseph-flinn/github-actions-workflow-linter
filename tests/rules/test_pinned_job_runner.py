@@ -1,11 +1,11 @@
-"""Test src/bitwarden_workflow_linter/rules/pinned_job_runner.py."""
+"""Test src/github_actions_workflow_linter/rules/pinned_job_runner.py."""
 
 import pytest
 
 from ruamel.yaml import YAML
 
-from src.bitwarden_workflow_linter.load import WorkflowBuilder
-from src.bitwarden_workflow_linter.rules.pinned_job_runner import (
+from src.github_actions_workflow_linter.load import WorkflowBuilder
+from src.github_actions_workflow_linter.rules.pinned_job_runner import (
     RuleJobRunnerVersionPinned,
 )
 
@@ -26,7 +26,7 @@ jobs:
       - run: echo test
 
   call-workflow:
-    uses: bitwarden/server/.github/workflows/workflow-linter.yml@master
+    uses: flinnsolutions/server/.github/workflows/workflow-linter.yml@master
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 

@@ -1,12 +1,12 @@
-"""Test src/bitwarden_workflow_linter/rules/run_actionlint."""
+"""Test src/github_actions_workflow_linter/rules/run_actionlint."""
 
 import pytest
 import subprocess
 
 from ruamel.yaml import YAML
 
-from src.bitwarden_workflow_linter.load import WorkflowBuilder
-from src.bitwarden_workflow_linter.rules.run_actionlint import (
+from src.github_actions_workflow_linter.load import WorkflowBuilder
+from src.github_actions_workflow_linter.rules.run_actionlint import (
     RunActionlint,
     install_actionlint_source,
     check_actionlint,
@@ -138,7 +138,7 @@ def test_run_actionlint_installed(monkeypatch, rule):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
     monkeypatch.setattr(
-        "src.bitwarden_workflow_linter.rules.run_actionlint.check_actionlint",
+        "src.github_actions_workflow_linter.rules.run_actionlint.check_actionlint",
         mock_check_actionlint,
     )
 
@@ -152,7 +152,7 @@ def test_run_actionlint_not_installed(monkeypatch, rule):
         return False, ""
 
     monkeypatch.setattr(
-        "src.bitwarden_workflow_linter.rules.run_actionlint.check_actionlint",
+        "src.github_actions_workflow_linter.rules.run_actionlint.check_actionlint",
         mock_check_actionlint,
     )
 
@@ -171,7 +171,7 @@ def test_run_actionlint_installed_error(monkeypatch, rule):
 
     monkeypatch.setattr(subprocess, "run", mock_run)
     monkeypatch.setattr(
-        "src.bitwarden_workflow_linter.rules.run_actionlint.check_actionlint",
+        "src.github_actions_workflow_linter.rules.run_actionlint.check_actionlint",
         mock_check_actionlint,
     )
 

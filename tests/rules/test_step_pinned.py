@@ -1,11 +1,11 @@
-"""Test src/bitwarden_workflow_linter/rules/step_pinned.py."""
+"""Test src/github_actions_workflow_linter/rules/step_pinned.py."""
 
 import pytest
 
 from ruamel.yaml import YAML
 
-from src.bitwarden_workflow_linter.load import WorkflowBuilder
-from src.bitwarden_workflow_linter.rules.step_pinned import RuleStepUsesPinned
+from src.github_actions_workflow_linter.load import WorkflowBuilder
+from src.github_actions_workflow_linter.rules.step_pinned import RuleStepUsesPinned
 
 yaml = YAML()
 
@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Test Internal Action
-        uses: bitwarden/ios/.github/actions/dispatch-and-download@main
+        uses: flinnsolutions/ios/.github/actions/dispatch-and-download@main
 
       - name: Test Local Action
         uses: ./actions/test-action
@@ -33,8 +33,8 @@ jobs:
       - name: Test Run Action
         run: echo "test"
 
-      - name: Test Bitwarden Action
-        uses: bitwarden/sm-action@92d1d6a4f26a89a8191c83ab531a53544578f182 # v2.0.0
+      - name: Test GitHub Org Action
+        uses: flinnsolutions/sm-action@92d1d6a4f26a89a8191c83ab531a53544578f182 # v2.0.0
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
@@ -60,7 +60,7 @@ jobs:
         uses: actions/checkout@b4ffde
 
       - name: Test Internal Commit
-        uses: bitwarden/gh-actions/get-keyvault-secrets@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: flinnsolutions/gh-actions/get-keyvault-secrets@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 """
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 

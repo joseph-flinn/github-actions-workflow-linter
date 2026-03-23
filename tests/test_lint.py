@@ -1,9 +1,9 @@
-"""Test src/bitwarden_workflow_linter/lint.py."""
+"""Test src/github_actions_workflow_linter/lint.py."""
 
 import pytest
 
-from src.bitwarden_workflow_linter.lint import LinterCmd
-from src.bitwarden_workflow_linter.utils import Settings, LintFinding, LintLevels
+from src.github_actions_workflow_linter.lint import LinterCmd
+from src.github_actions_workflow_linter.utils import Settings, LintFinding, LintLevels
 
 
 @pytest.fixture(name="settings")

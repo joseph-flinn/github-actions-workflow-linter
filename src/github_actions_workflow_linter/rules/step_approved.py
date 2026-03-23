@@ -41,8 +41,8 @@ class RuleStepUsesApproved(Rule):
         if "@" not in obj.uses:
             return True
 
-        ## Force pass for any bitwarden/
-        if obj.uses.startswith("bitwarden/"):
+        ## TODO: Force pass for any flinnsolutions/
+        if obj.uses.startswith("flinnsolutions/"):
             return True
 
         return False
@@ -66,8 +66,8 @@ class RuleStepUsesApproved(Rule):
               - name: Checkout Branch
                 uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
-              - name: Test Bitwarden Action
-                uses: bitwarden/gh-actions/get-keyvault-secrets@main
+              - name: Test GitHub Org Action
+                uses: flinnsolutions/gh-actions/get-keyvault-secrets@main
 
               - name: Test Local Action
                 uses: ./actions/test-action
@@ -88,7 +88,7 @@ class RuleStepUsesApproved(Rule):
         if len(obj.uses_path.split("/")) > 2:
             obj_path = "/".join(obj.uses_path.split("/")[:-1])
 
-        # Actions in bitwarden/ are auto-approved
+        # Actions in flinnsolutions/ are auto-approved
         if obj.uses and not obj_path in self.settings.approved_actions:
             return False, (
                 f"New Action detected: {obj.uses_path}\nFor security purposes, "

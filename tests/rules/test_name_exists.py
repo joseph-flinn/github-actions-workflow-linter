@@ -1,11 +1,11 @@
-"""Test src/bitwarden_workflow_linter/rules/name_exists.py."""
+"""Test src/github_actions_workflow_linter/rules/name_exists.py."""
 
 import pytest
 
 from ruamel.yaml import YAML
 
-from src.bitwarden_workflow_linter.load import WorkflowBuilder
-from src.bitwarden_workflow_linter.rules.name_exists import RuleNameExists
+from src.github_actions_workflow_linter.load import WorkflowBuilder
+from src.github_actions_workflow_linter.rules.name_exists import RuleNameExists
 
 
 yaml = YAML()

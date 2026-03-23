@@ -1,11 +1,11 @@
-"""Test src/bitwarden_workflow_linter/models/step.py."""
+"""Test src/github_actions_workflow_linter/models/step.py."""
 
 import json
 import pytest
 
 from ruamel.yaml import YAML
 
-from src.bitwarden_workflow_linter.models.step import Step
+from src.github_actions_workflow_linter.models.step import Step
 
 
 @pytest.fixture(name="default_step")
@@ -23,7 +23,7 @@ run: echo "test"
 def fixture_uses_step():
     step_str = """\
 name: Download Artifacts
-uses: bitwarden/download-artifacts@main # v1.0.0
+uses: flinnsolutions/download-artifacts@main # v1.0.0
 with:
     workflow: upload-test-artifacts.yml
     artifacts: artifact
@@ -40,7 +40,7 @@ with:
 def fixture_uses_step_no_comments():
     step_str = """\
 name: Download Artifacts
-uses: bitwarden/download-artifacts@main
+uses: flinnsolutions/download-artifacts@main
 with:
     workflow: upload-test-artifacts.yml
     artifacts: artifact

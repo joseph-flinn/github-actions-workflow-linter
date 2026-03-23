@@ -1,12 +1,12 @@
-"""Test src/bitwarden_workflow_linter/rules/step_approved.py."""
+"""Test src/github_actions_workflow_linter/rules/step_approved.py."""
 
 import pytest
 
 from ruamel.yaml import YAML
 
-from src.bitwarden_workflow_linter.load import WorkflowBuilder
-from src.bitwarden_workflow_linter.rules.step_approved import RuleStepUsesApproved
-from src.bitwarden_workflow_linter.utils import Settings
+from src.github_actions_workflow_linter.load import WorkflowBuilder
+from src.github_actions_workflow_linter.rules.step_approved import RuleStepUsesApproved
+from src.github_actions_workflow_linter.utils import Settings
 
 
 yaml = YAML()
@@ -44,8 +44,8 @@ jobs:
       - name: Checkout Branch
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
-      - name: Test Bitwarden Action
-        uses: bitwarden/gh-actions/get-keyvault-secrets@main
+      - name: Test GitHub Org Action
+        uses: flinnsolutions/gh-actions/get-keyvault-secrets@main
 
       - name: Test Local Action
         uses: ./actions/test-action
@@ -71,7 +71,7 @@ jobs:
         uses: joseph-flinn/action-DNE@main
 
       - name: Checkout Branch with Ref
-        uses: notbitwarden/subfolder/action-DNE@main
+        uses: joseph-flinn/subfolder/action-DNE@main
         with:
             ref: main
 

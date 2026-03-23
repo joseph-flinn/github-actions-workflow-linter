@@ -1,10 +1,10 @@
-"""Tests src/bitwarden_workflow_linter/utils.py."""
+"""Tests src/github_actions_workflow_linter/utils.py."""
 
-from src.bitwarden_workflow_linter.utils import Action, Colors, LintFinding, LintLevels
+from src.github_actions_workflow_linter.utils import Action, Colors, LintFinding, LintLevels
 
 
 def test_action_eq():
-    action_def = {"name": "bitwarden/sm-action", "version": "1.0.0", "sha": "some-sha"}
+    action_def = {"name": "github/checkout", "version": "1.0.0", "sha": "some-sha"}
 
     action_a = Action(**action_def)
     action_b = Action(**action_def)
@@ -14,8 +14,8 @@ def test_action_eq():
 
 
 def test_action_ne():
-    action_a = Action(name="bitwarden/sm-action", version="1.0.0", sha="some-sha")
-    action_b = Action(name="bitwarden/sm-action", version="1.1.0", sha="some-other-sha")
+    action_a = Action(name="github/checkout", version="1.0.0", sha="some-sha")
+    action_b = Action(name="github/checkout", version="1.1.0", sha="some-other-sha")
 
     assert (action_a == action_b) is False
     assert (action_a != action_b) is True
