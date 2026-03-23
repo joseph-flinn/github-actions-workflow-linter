@@ -11,7 +11,6 @@ from src.github_actions_workflow_linter.models.step import Step
 from src.github_actions_workflow_linter.models.workflow import Workflow
 from src.github_actions_workflow_linter.rule import Rule, RuleExecutionException
 
-
 yaml = YAML()
 
 

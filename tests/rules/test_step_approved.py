@@ -8,7 +8,6 @@ from src.github_actions_workflow_linter.load import WorkflowBuilder
 from src.github_actions_workflow_linter.rules.step_approved import RuleStepUsesApproved
 from src.github_actions_workflow_linter.utils import Settings
 
-
 yaml = YAML()
 
 

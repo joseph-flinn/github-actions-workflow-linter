@@ -10,7 +10,6 @@ from .conftest import FIXTURE_DIR
 from src.github_actions_workflow_linter.load import WorkflowBuilder
 from src.github_actions_workflow_linter.models.workflow import Workflow
 
-
 yaml = YAML()
 
 
@@ -21,8 +20,7 @@ def fixture_workflow_filename():
 
 @pytest.fixture(name="simple_workflow_yaml")
 def fixture_simple_workflow_yaml():
-    return yaml.load(
-        """\
+    return yaml.load("""\
 ---
 name: test
 on:
@@ -35,14 +33,12 @@ jobs:
     steps:
       - name: Test
         run: echo test
-"""
-    )
+""")
 
 
 @pytest.fixture(name="complex_workflow_yaml")
 def fixture_complex_workflow_yaml():
-    return yaml.load(
-        """\
+    return yaml.load("""\
 ---
 name: test
 on:
@@ -75,8 +71,7 @@ jobs:
     steps:
       - name: local-action
         uses: ./version-bump
-"""
-    )
+""")
 
 
 def test_load_workflow_from_file(workflow_filename: str) -> None:

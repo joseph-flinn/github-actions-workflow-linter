@@ -155,6 +155,7 @@ and `src/github_actions_workflow_linter/default_settings.yaml` to make the rule 
 
 ### To-Do
 
+- [ ] Upgrade all dependencies
 - [ ] Add feature to force pass any actions in GitHub Org (from `settings.yaml`)
 - [ ] Update Rule Model with configurable levels from `settings.yaml`
 - [ ] Add Rule to assert correct format for single line run

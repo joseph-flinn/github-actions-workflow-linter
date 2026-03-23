@@ -6,14 +6,12 @@ from ruamel.yaml import YAML
 
 from src.github_actions_workflow_linter.models.job import Job
 
-
 yaml = YAML()
 
 
 @pytest.fixture(name="workflow_yaml")
 def fixture_workflow_yaml():
-    return yaml.load(
-        """\
+    return yaml.load("""\
 ---
 name: test
 on:
@@ -47,8 +45,7 @@ jobs:
     steps:
       - name: local-action
         uses: ./version-bump
-"""
-    )
+""")
 
 
 def test_job_default(workflow_yaml):

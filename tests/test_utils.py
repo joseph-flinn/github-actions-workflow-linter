@@ -1,6 +1,11 @@
 """Tests src/github_actions_workflow_linter/utils.py."""
 
-from src.github_actions_workflow_linter.utils import Action, Colors, LintFinding, LintLevels
+from src.github_actions_workflow_linter.utils import (
+    Action,
+    Colors,
+    LintFinding,
+    LintLevels,
+)
 
 
 def test_action_eq():
