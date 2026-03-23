@@ -1,17 +1,14 @@
 {
-  "name": "@bitwarden/template",
+  "name": "@joseph-flinn/gawl",
   "version": "0.0.0",
-  "description": "Bitwarden Template",
+  "description": "GitHub Actions Workflow Linter",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bitwarden/template.git"
+    "url": "git+https://github.com/joseph-flinn/github-actions-workflow-linter.git"
   },
-  "author": "Bitwarden Inc. <hello@bitwarden.com> (https://bitwarden.com)",
+  "author": "Joseph Flinn (https://github.com/joseph-flinn)",
   "license": "SEE LICENSE IN LICENSE.txt",
-  "bugs": {
-    "url": "https://github.com/bitwarden/template/issues"
-  },
-  "homepage": "https://bitwarden.com",
+  "homepage": "https://github.com/joseph-flinn/github-actions-workflow-linter",
   "devDependencies": {
     "husky": "9.0.11",
     "lint-staged": "15.2.7",

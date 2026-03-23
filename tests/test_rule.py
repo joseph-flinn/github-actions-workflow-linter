@@ -1,16 +1,15 @@
-"""Tests src/bitwarden_workflow_linter/rule.py."""
+"""Tests src/github_actions_workflow_linter/rule.py."""
 
 import pytest
 from typing import Union
 
 from ruamel.yaml import YAML
 
-from src.bitwarden_workflow_linter.load import WorkflowBuilder
-from src.bitwarden_workflow_linter.models.job import Job
-from src.bitwarden_workflow_linter.models.step import Step
-from src.bitwarden_workflow_linter.models.workflow import Workflow
-from src.bitwarden_workflow_linter.rule import Rule, RuleExecutionException
-
+from src.github_actions_workflow_linter.load import WorkflowBuilder
+from src.github_actions_workflow_linter.models.job import Job
+from src.github_actions_workflow_linter.models.step import Step
+from src.github_actions_workflow_linter.models.workflow import Workflow
+from src.github_actions_workflow_linter.rule import Rule, RuleExecutionException
 
 yaml = YAML()
 

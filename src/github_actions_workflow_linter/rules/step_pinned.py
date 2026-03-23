@@ -11,16 +11,15 @@ class RuleStepUsesPinned(Rule):
     """Rule to contain the enforcement logic for pinning Actions versions.
 
     Definition of Internal Action:
-      An Action that exists in the `bitwarden/gh-actions` GitHub Repository.
+      An Action that exists in the `flinnsolutions/gh-actions` GitHub Repository.
 
-    For any external Action (any Action that does not fit the above definition of
-    an Internal Action), to mitigate the risks of supply chain attacks in our CI
-    pipelines, we pin any use of an Action to a specific hash that has been verified
-    and pre-approved after a security audit of the version of the Action.
+    For any external Action (any Action that does not fit the above definition of an Internal
+    Action), to mitigate the risks of supply chain attacks in our CI pipelines, we pin any use of an
+    Action to a specific hash that has been verified and pre-approved after a security audit of the
+    version of the Action.
 
-    All Internal Actions, should be pinned to 'main'. This prevents Renovate from
-    spamming a bunch of PRs across all of our repos when `bitwarden/gh-actions` is
-    updated.
+    All Internal Actions, should be pinned to 'main'. This prevents Renovate from spamming a bunch
+    of PRs across all of our repos when `flinnsolutions/gh-actions` is updated.
     """
 
     def __init__(self, settings: Optional[Settings] = None) -> None:
@@ -64,8 +63,8 @@ class RuleStepUsesPinned(Rule):
         - name: Checkout Branch
           uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
-        - name: Test Bitwarden Action
-          uses: bitwarden/gh-actions/get-keyvault-secrets@main
+        - name: Test GitHub Org Action
+          uses: flinnsolutions/gh-actions/get-keyvault-secrets@main
 
         - name: Test Local Action
           uses: ./actions/test-action
@@ -73,16 +72,16 @@ class RuleStepUsesPinned(Rule):
         - name: Test Run Action
           run: echo "test"
 
-        In this example, 'actions/checkout' must be pinned to the full commit
-        of the tag while 'bitwarden/gh-actions/get-keyvault-secrets' must be
-        pinned to 'main'. The other two Steps will be skipped.
+        In this example, 'actions/checkout' must be pinned to the full commit of the tag while
+        'flinnsolutions/gh-actions/get-keyvault-secrets' must be pinned to 'main'. The other two
+        Steps will be skipped.
         """
         if self.skip(obj):
             return True, ""
 
         path, ref = obj.uses.split("@")
 
-        if path.startswith("bitwarden/"):
+        if path.startswith("flinnsolutions/"):
             if ref == "main" or "sm-action" in path:
                 return True, ""
             return False, "Please pin to main"

@@ -1,11 +1,13 @@
-"""Test src/bitwarden_workflow_linter/rules/name_capitalized.py."""
+"""Test src/github_actions_workflow_linter/rules/name_capitalized.py."""
 
 import pytest
 
 from ruamel.yaml import YAML
 
-from src.bitwarden_workflow_linter.load import WorkflowBuilder
-from src.bitwarden_workflow_linter.rules.name_capitalized import RuleNameCapitalized
+from src.github_actions_workflow_linter.load import WorkflowBuilder
+from src.github_actions_workflow_linter.rules.name_capitalized import (
+    RuleNameCapitalized,
+)
 
 yaml = YAML()
 

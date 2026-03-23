@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "bitwarden_workflow_linter"
+name = "github_actions_workflow_linter"
 dynamic = ["version"]
 authors = []
 description = "Custom GitHub Action Workflow Linter"
@@ -20,14 +20,14 @@ $DEPS
 ]
 
 [project.urls]
-Homepage = "https://github.com/bitwarden/workflow-linter"
-Issues = "https://github.com/bitwarden/workflow-linter/issues"
+Homepage = "https://github.com/joseph-flinn/github-actionsworkflow-linter"
+Issues = "https://github.com/joseph-flinn/github-actions-workflow-linter/issues"
 
 [project.scripts]
-bwwl = "bitwarden_workflow_linter.cli:main"
+gawl = "github_actions_workflow_linter.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/bitwarden_workflow_linter"]
+packages = ["src/github_actions_workflow_linter"]
 
 [tool.hatch.version]
-path = "src/bitwarden_workflow_linter/__about__.py"
+path = "src/github_actions_workflow_linter/__about__.py"

@@ -149,11 +149,6 @@
     "sha": "de617f46172a906d0617bb0e50d81e9e3aec24c8",
     "version": "v3.0.1"
   },
-  "bitwarden/sm-action": {
-    "name": "bitwarden/sm-action",
-    "sha": "92d1d6a4f26a89a8191c83ab531a53544578f182",
-    "version": "v2.0.0"
-  },
   "checkmarx/ast-github-action": {
     "name": "checkmarx/ast-github-action",
     "sha": "b74e8d514feae4ad5ad2b43e72590935bd2daf5f",

@@ -1,19 +1,17 @@
-"""Test src/bitwarden_workflow_linter/models/job.py."""
+"""Test src/github_actions_workflow_linter/models/job.py."""
 
 import pytest
 
 from ruamel.yaml import YAML
 
-from src.bitwarden_workflow_linter.models.job import Job
-
+from src.github_actions_workflow_linter.models.job import Job
 
 yaml = YAML()
 
 
 @pytest.fixture(name="workflow_yaml")
 def fixture_workflow_yaml():
-    return yaml.load(
-        """\
+    return yaml.load("""\
 ---
 name: test
 on:
@@ -29,7 +27,7 @@ jobs:
         run: echo test
 
   call-workflow:
-    uses: bitwarden/server/.github/workflows/workflow-linter.yml@master
+    uses: flinnsolutions/server/.github/workflows/workflow-linter.yml@master
 
   test-normal-action:
     name: Download Latest
@@ -47,8 +45,7 @@ jobs:
     steps:
       - name: local-action
         uses: ./version-bump
-"""
-    )
+""")
 
 
 def test_job_default(workflow_yaml):

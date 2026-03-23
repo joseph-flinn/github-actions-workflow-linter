@@ -55,19 +55,19 @@ tasks:
 
   test:e2e:lint:
     cmds:
-      - pipenv run bwwl lint --files tests/fixtures
+      - pipenv run gawl lint --files tests/fixtures
 
   test:e2e:lint:single:
     cmds:
-      - pipenv run bwwl lint --files tests/fixtures/test.yml
+      - pipenv run gawl lint --files tests/fixtures/test.yml
 
   test:e2e:actions:add:
     cmds:
-      - pipenv run bwwl actions --output test.json add bitwarden/sm-action
+      - pipenv run gawl actions --output test.json add bitwarden/sm-action
 
   test:e2e:actions:update:
     cmds:
-      - pipenv run bwwl actions --output test.json update
+      - pipenv run gawl actions --output test.json update
 
   dist:
     silent: true

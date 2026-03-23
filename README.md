@@ -1,12 +1,8 @@
-# Bitwarden Workflow Linter
+# GitHub Actions Workflow Linter (gawl)
 
-Bitwarden's Workflow Linter is an extensible linter to apply opinionated organization-specific
-GitHub Action standards. It was designed to be used alongside
-[yamllint](https://github.com/adrienverge/yamllint) to enforce
+GitHub Actions Workflow Linter is an extensible linter to apply opinionated GitHub Action standards.
+It was designed to be used alongside [yamllint](https://github.com/adrienverge/yamllint) to enforce
 specific YAML standards.
-
-To see an example of Workflow Linter in practice in GitHub Action, see the
-[composite Action](https://github.com/bitwarden/gh-actions/tree/main/lint-workflow).
 
 ## Installation
 
@@ -19,7 +15,7 @@ Not yet implemented
 ### Locally
 
 ```
-git clone git@github.com:bitwarden/workflow-linter.git
+git clone git@github.com:joseph-flinn/workflow-linter.git
 cd workflow-linter
 
 pip install -e .
@@ -29,23 +25,23 @@ pip install -e .
 
 ### Setup settings.yaml
 
-If a non-default configuration is desired (different than `src/bitwarden_workflow_linter/default_settings.yaml`), copy
-the below and create a `settings.yaml` in the directory that `bwwl` will be running from.
+If a non-default configuration is desired (different than `src/github_actions_workflow_linter/default_settings.yaml`), copy
+the below and create a `settings.yaml` in the directory that `gawl` will be running from.
 
 ```yaml
 enabled_rules:
-    - bitwarden_workflow_linter.rules.name_exists.RuleNameExists
-    - bitwarden_workflow_linter.rules.name_capitalized.RuleNameCapitalized
-    - bitwarden_workflow_linter.rules.pinned_job_runner.RuleJobRunnerVersionPinned
-    - bitwarden_workflow_linter.rules.job_environment_prefix.RuleJobEnvironmentPrefix
-    - bitwarden_workflow_linter.rules.step_pinned.RuleStepUsesPinned
-    - bitwarden_workflow_linter.rules.underscore_outputs.RuleUnderscoreOutputs
+    - github_actions_workflow_linter.rules.name_exists.RuleNameExists
+    - github_actions_workflow_linter.rules.name_capitalized.RuleNameCapitalized
+    - github_actions_workflow_linter.rules.pinned_job_runner.RuleJobRunnerVersionPinned
+    - github_actions_workflow_linter.rules.job_environment_prefix.RuleJobEnvironmentPrefix
+    - github_actions_workflow_linter.rules.step_pinned.RuleStepUsesPinned
+    - github_actions_workflow_linter.rules.underscore_outputs.RuleUnderscoreOutputs
 
 approved_actions_path: default_actions.json
 ```
 
 ```
-usage: bwwl [-h] [-v] {lint,actions} ...
+usage: ghwl [-h] [-v] {lint,actions} ...
 
 positional arguments:
   {lint,actions}
@@ -75,8 +71,8 @@ pipenv shell
 
 ### Testing
 
-All built-in `src/bitwarden_workflow_linter/rules` should have 100% code coverage and we should shoot for an overall coverage of 80%+.
-We are lax on the
+All built-in `src/github_actions_workflow_linter/rules` should have 100% code coverage and we should
+shoot for an overall coverage of 80%+. We are lax on the
 [imperative shell](https://www.destroyallsoftware.com/screencasts/catalog/functional-core-imperative-shell)
 (code interacting with other systems; ie. disk, network, etc), but we strive to maintain a high coverage over the
 functional core (objects and models).
@@ -154,8 +150,12 @@ not support Rules that check against multiple objects at a time OR file level fo
 two empty lines between each job)
 
 To activate a rule after implementing it, add it to `settings.yaml` in the project's base folder
-and `src/bitwarden_workflow_linter/default_settings.yaml` to make the rule default
+and `src/github_actions_workflow_linter/default_settings.yaml` to make the rule default
+
 
 ### To-Do
 
--   [ ] Add Rule to assert correct format for single line run
+- [ ] Upgrade all dependencies
+- [ ] Add feature to force pass any actions in GitHub Org (from `settings.yaml`)
+- [ ] Update Rule Model with configurable levels from `settings.yaml`
+- [ ] Add Rule to assert correct format for single line run

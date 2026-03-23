@@ -43,7 +43,7 @@ class RuleJobRunnerVersionPinned(Rule):
               - run: echo test
 
         call-workflow:
-          uses: bitwarden/server/.github/workflows/workflow-linter.yml@master
+          uses: joseph-flinn/scalable-dev-practices-example/.github/workflows/workflow-linter.yml@master
 
         'runs-on' is pinned to '22.04' instead of 'latest'
         """

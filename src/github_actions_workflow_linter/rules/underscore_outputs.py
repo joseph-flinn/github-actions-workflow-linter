@@ -1,4 +1,4 @@
-""" Rule to enforce all GitHub outputs with more than one words use an underscore."""
+"""Rule to enforce all GitHub outputs with more than one words use an underscore."""
 
 import re
 

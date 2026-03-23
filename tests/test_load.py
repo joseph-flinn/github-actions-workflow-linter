@@ -1,4 +1,4 @@
-"""Tests src/bitwarden_workflow_linter/load.py."""
+"""Tests src/github_actions_workflow_linter/load.py."""
 
 import pytest
 
@@ -7,9 +7,8 @@ from ruamel.yaml.comments import CommentedMap
 
 from .conftest import FIXTURE_DIR
 
-from src.bitwarden_workflow_linter.load import WorkflowBuilder
-from src.bitwarden_workflow_linter.models.workflow import Workflow
-
+from src.github_actions_workflow_linter.load import WorkflowBuilder
+from src.github_actions_workflow_linter.models.workflow import Workflow
 
 yaml = YAML()
 
@@ -21,8 +20,7 @@ def fixture_workflow_filename():
 
 @pytest.fixture(name="simple_workflow_yaml")
 def fixture_simple_workflow_yaml():
-    return yaml.load(
-        """\
+    return yaml.load("""\
 ---
 name: test
 on:
@@ -35,14 +33,12 @@ jobs:
     steps:
       - name: Test
         run: echo test
-"""
-    )
+""")
 
 
 @pytest.fixture(name="complex_workflow_yaml")
 def fixture_complex_workflow_yaml():
-    return yaml.load(
-        """\
+    return yaml.load("""\
 ---
 name: test
 on:
@@ -57,7 +53,7 @@ jobs:
         run: echo test
 
   call-workflow:
-    uses: bitwarden/server/.github/workflows/workflow-linter.yml@master
+    uses: flinnsolutions/server/.github/workflows/workflow-linter.yml@master
 
   test-normal-action:
     name: Download Latest
@@ -75,8 +71,7 @@ jobs:
     steps:
       - name: local-action
         uses: ./version-bump
-"""
-    )
+""")
 
 
 def test_load_workflow_from_file(workflow_filename: str) -> None:
