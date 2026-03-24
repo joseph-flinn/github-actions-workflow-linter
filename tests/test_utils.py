@@ -1,11 +1,30 @@
 """Tests src/github_actions_workflow_linter/utils.py."""
 
+import pytest
+
+from ruamel.yaml import YAML
+
+from .conftest import FIXTURE_DIR
+
 from src.github_actions_workflow_linter.utils import (
     Action,
     Colors,
     LintFinding,
     LintLevels,
+    Settings
 )
+
+yaml = YAML()
+
+
+@pytest.fixture(name="rules_settings_filename")
+def fixture_local_settings_rule():
+    return f"{FIXTURE_DIR}/test_rules_settings.yaml"
+
+
+@pytest.fixture(name="full_settings_filename")
+def fixture_local_settings_full():
+    return f"{FIXTURE_DIR}/test_full_settings.yaml"
 
 
 def test_action_eq():
@@ -38,3 +57,24 @@ def test_lint_finding():
 
     error = LintFinding(description="<no description>", level=LintLevels.ERROR)
     assert str(error) == "\x1b[31merror\x1b[0m <no description>"
+
+
+def test_settings_builder_default():
+    settings = Settings.builder()
+
+    assert len(settings.enabled_rules) == 6
+    assert len(settings.approved_actions) == 28
+
+
+def test_settings_builder_local_rules(rules_settings_filename: str):
+    settings = Settings.builder(settings_filename=rules_settings_filename)
+
+    assert len(settings.enabled_rules) == 1
+    assert len(settings.approved_actions) == 28 #default actions
+
+
+def test_settings_builder_local_rules(full_settings_filename: str):
+    settings = Settings.builder(settings_filename=full_settings_filename)
+
+    assert len(settings.enabled_rules) == 1
+    assert len(settings.approved_actions) == 2
