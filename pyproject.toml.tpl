@@ -20,7 +20,7 @@ $DEPS
 ]
 
 [project.urls]
-Homepage = "https://github.com/joseph-flinn/github-actionsworkflow-linter"
+Homepage = "https://github.com/joseph-flinn/github-actions-workflow-linter"
 Issues = "https://github.com/joseph-flinn/github-actions-workflow-linter/issues"
 
 [project.scripts]

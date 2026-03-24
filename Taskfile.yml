@@ -3,6 +3,11 @@
 version: '3'
 
 tasks:
+  init:
+    silent: true
+    cmds:
+      - pipenv install --dev
+
   fmt:
     silent: true
     cmds:
