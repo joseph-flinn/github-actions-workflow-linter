@@ -105,7 +105,7 @@ class SettingsError(Exception):
     pass
 
 
-SettingsFromFactory = TypeVar("SettingsFromFactory", bound="Settings")
+SettingsFromBuilder = TypeVar("SettingsFromBuilder", bound="Settings")
 
 
 class Settings:
@@ -140,8 +140,17 @@ class Settings:
             name: Action(**action) for name, action in approved_actions.items()
         }
 
-    @staticmethod
-    def factory() -> SettingsFromFactory:
+    @classmethod
+    def builder(
+        cls,
+        settings_filename: str= "settings.yaml",
+    ) -> SettingsFromBuilder:
+        """
+        Build a Settings object.
+
+        Build a Settings object with the default top-level values provided by the tool. If a
+        settings.yaml file is provided, overwrite the default top-level value.
+        """
         with (
             importlib.resources.files("github_actions_workflow_linter")
             .joinpath("default_settings.yaml")
@@ -149,9 +158,8 @@ class Settings:
         ):
             settings = yaml.load(file)
 
-        settings_filename = "settings.yaml"
+        # If local settings exits, override default settings with local settings.
         local_settings = None
-
         if os.path.exists(settings_filename):
             with open(settings_filename, encoding="utf8") as settings_file:
                 local_settings = yaml.load(settings_file)
@@ -159,6 +167,7 @@ class Settings:
         if local_settings:
             settings.update(local_settings)
 
+        # Build list of Approved Actions
         if settings["approved_actions_path"] == "default_actions.json":
             with (
                 importlib.resources.files("github_actions_workflow_linter")
@@ -172,7 +181,7 @@ class Settings:
             ) as action_file:
                 settings["approved_actions"] = json.load(action_file)
 
-        return Settings(
-            enabled_rules=settings["enabled_rules"],
-            approved_actions=settings["approved_actions"],
-        )
+        # Build the class
+        cls.enabled_rules = settings["enabled_rules"]
+        cls.approved_actions = settings["approved_actions"]
+        return cls
