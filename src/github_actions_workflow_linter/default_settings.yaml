@@ -5,7 +5,6 @@ enabled_rules:
   - github_actions_workflow_linter.rules.job_environment_prefix.RuleJobEnvironmentPrefix
   - github_actions_workflow_linter.rules.step_pinned.RuleStepUsesPinned
   - github_actions_workflow_linter.rules.underscore_outputs.RuleUnderscoreOutputs
-  - github_actions_workflow_linter.rules.run_actionlint.RunActionlint
   #  - github_actions_workflow_linter.rules.step_approved.RuleStepUsesApproved
 
 approved_actions_path: default_actions.json
