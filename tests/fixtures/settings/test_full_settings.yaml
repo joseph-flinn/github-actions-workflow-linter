@@ -2,3 +2,9 @@ enabled_rules:
   - github_actions_workflow_linter.rules.step_approved
 
 approved_actions_path: tests/fixtures/test_default_actions.json
+
+internal_actions:
+  enabled: True
+  org: "flinnsolutions"
+  repos:
+    - "gh-actions"

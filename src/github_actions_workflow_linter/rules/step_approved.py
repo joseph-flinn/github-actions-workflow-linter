@@ -41,9 +41,11 @@ class RuleStepUsesApproved(Rule):
         if "@" not in obj.uses:
             return True
 
-        ## TODO: Force pass for any flinnsolutions/
-        if obj.uses.startswith("flinnsolutions/"):
-            return True
+        ## Force pass for any configured internal actions
+        if self.settings.internal_actions.enabled:
+            for repo in self.settings.internal_actions.repos:
+                if obj.uses.startswith(repo):
+                    return True
 
         return False
 
@@ -67,7 +69,10 @@ class RuleStepUsesApproved(Rule):
                 uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
               - name: Test GitHub Org Action
-                uses: flinnsolutions/gh-actions/get-keyvault-secrets@main
+                uses: flinnsolutions/gh-actions/create-release@main
+
+              - name: Test internal GitHub Org Action
+                uses: flinnsolutions/internal-actions/get-keyvault-secrets@main
 
               - name: Test Local Action
                 uses: ./actions/test-action

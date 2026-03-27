@@ -14,6 +14,43 @@ yaml = YAML()
 
 
 @dataclass
+class Action:
+    """Collection of the metadata associated with a GitHub Action."""
+
+    name: str
+    version: str = ""
+    sha: str = ""
+
+    def __eq__(self, other: Self) -> bool:
+        """Override Action equality.
+
+        Args:
+          other:
+            Another Action type object to compare
+
+        Return
+          The state of equality
+        """
+        return (
+            self.name == other.name
+            and self.version == other.version
+            and self.sha == other.sha
+        )
+
+    def __ne__(self, other: Self) -> bool:
+        """Override Action unequality.
+
+        Args:
+          other:
+            Another Action type object to compare
+
+        Return
+          The negation of the state of equality
+        """
+        return not self.__eq__(other)
+
+
+@dataclass
 class Colors:
     """Class containing color codes for printing strings to output."""
 
@@ -25,6 +62,21 @@ class Colors:
     magenta = "35m"
     cyan = "36m"
     white = "37m"
+
+
+@dataclass
+class InternalActionsSettings:
+    """Settings object for Internal Actions feature"""
+
+    repos: list[str]
+    enabled: bool = False
+
+    def __init__(self, internal_actions_settings: dict) -> None:
+        self.enabled = internal_actions_settings.get("enabled", False)
+        org = internal_actions_settings["org"]
+        self.repos = [
+            f"{org}/{repo}" for repo in internal_actions_settings.get("repos", [])
+        ]
 
 
 @dataclass
@@ -62,43 +114,6 @@ class LintFinding:
         )
 
 
-@dataclass
-class Action:
-    """Collection of the metadata associated with a GitHub Action."""
-
-    name: str
-    version: str = ""
-    sha: str = ""
-
-    def __eq__(self, other: Self) -> bool:
-        """Override Action equality.
-
-        Args:
-          other:
-            Another Action type object to compare
-
-        Return
-          The state of equality
-        """
-        return (
-            self.name == other.name
-            and self.version == other.version
-            and self.sha == other.sha
-        )
-
-    def __ne__(self, other: Self) -> bool:
-        """Override Action unequality.
-
-        Args:
-          other:
-            Another Action type object to compare
-
-        Return
-          The negation of the state of equality
-        """
-        return not self.__eq__(other)
-
-
 class SettingsError(Exception):
     """Custom Exception to indicate an error with loading Settings."""
 
@@ -113,11 +128,13 @@ class Settings:
 
     enabled_rules: list[str]
     approved_actions: dict[str, Action]
+    internal_actions: InternalActionsSettings
 
     def __init__(
         self,
         enabled_rules: Optional[list[str]] = None,
         approved_actions: Optional[dict[str, dict[str, str]]] = None,
+        internal_actions: InternalActionsSettings = None,
     ) -> None:
         """Settings object that can be overridden in settings.py.
 
@@ -135,21 +152,26 @@ class Settings:
         if approved_actions is None:
             approved_actions = {}
 
+        if internal_actions is None:
+            internal_actions = InternalActionsSettings({})
+
         self.enabled_rules = enabled_rules
         self.approved_actions = {
             name: Action(**action) for name, action in approved_actions.items()
         }
+        self.internal_actions = internal_actions
 
     @classmethod
     def builder(
         cls,
-        settings_filename: str= "settings.yaml",
+        settings_filename: str = "settings.yaml",
     ) -> SettingsFromBuilder:
         """
         Build a Settings object.
 
-        Build a Settings object with the default top-level values provided by the tool. If a
-        settings.yaml file is provided, overwrite the default top-level value.
+        Build a Settings object with the default top-level values provided by the
+        tool. If a settings.yaml file is provided, overwrite the default top-level
+        value.
         """
         with (
             importlib.resources.files("github_actions_workflow_linter")
@@ -182,6 +204,9 @@ class Settings:
                 settings["approved_actions"] = json.load(action_file)
 
         # Build the class
-        cls.enabled_rules = settings["enabled_rules"]
-        cls.approved_actions = settings["approved_actions"]
+        cls.enabled_rules = settings.get("enabled_rules", [])
+        cls.approved_actions = settings.get("approved_actions", {})
+        cls.internal_actions = InternalActionsSettings(
+            settings.get("internal_actions", {})
+        )
         return cls

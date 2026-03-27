@@ -6,7 +6,7 @@ from ruamel.yaml import YAML
 
 from src.github_actions_workflow_linter.load import WorkflowBuilder
 from src.github_actions_workflow_linter.rules.step_approved import RuleStepUsesApproved
-from src.github_actions_workflow_linter.utils import Settings
+from src.github_actions_workflow_linter.utils import InternalActionsSettings, Settings
 
 yaml = YAML()
 
@@ -25,12 +25,37 @@ def fixture_settings():
                 "version": "v4.1.0",
                 "sha": "f44cd7b40bfd40b6aa1cc1b9b5b7bf03d3c67110",
             },
+        },
+        internal_actions=InternalActionsSettings(
+            {
+                "enabled": True,
+                "org": "flinnsolutions",
+                "repos": ["gh-actions", "internal-actions"],
+            }
+        ),
+    )
+
+
+@pytest.fixture(name="settings_no_internal_actions")
+def fixture_settings_no_internal_actions():
+    return Settings(
+        approved_actions={
+            "actions/checkout": {
+                "name": "actions/checkout",
+                "version": "v4.1.1",
+                "sha": "b4ffde65f46336ab88eb53be808477a3936bae11",
+            },
+            "actions/download-artifact": {
+                "name": "actions/download-artifact",
+                "version": "v4.1.0",
+                "sha": "f44cd7b40bfd40b6aa1cc1b9b5b7bf03d3c67110",
+            },
         }
     )
 
 
-@pytest.fixture(name="correct_workflow")
-def fixture_correct_workflow():
+@pytest.fixture(name="approved_workflow")
+def fixture_approved_workflow():
     workflow = """\
 ---
 on:
@@ -44,9 +69,12 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Test GitHub Org Action
-        uses: flinnsolutions/gh-actions/get-keyvault-secrets@main
+        uses: flinnsolutions/gh-actions/create-release@main
 
-      - name: Test Local Action
+      - name: Test internal GitHub Org Action
+        uses: flinnsolutions/internal-actions/get-keyvault-secrets@main
+
+      - name: Test Local Repo Action
         uses: ./actions/test-action
 
       - name: Test Run Action
@@ -55,8 +83,8 @@ jobs:
     return WorkflowBuilder.build(workflow=yaml.load(workflow), from_file=False)
 
 
-@pytest.fixture(name="incorrect_workflow")
-def fixture_incorrect_workflow():
+@pytest.fixture(name="unapproved_workflow")
+def fixture_unapproved_workflow():
     workflow = """\
 ---
 on:
@@ -66,6 +94,9 @@ jobs:
   job-key:
     runs-on: ubuntu-22.04
     steps:
+      - name: Checkout Branch
+        uses: azure/login@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
       - name: Checkout Branch
         uses: joseph-flinn/action-DNE@main
 
@@ -83,33 +114,64 @@ def fixture_rule(settings):
     return RuleStepUsesApproved(settings=settings)
 
 
-def test_rule_on_correct_workflow(rule, correct_workflow):
-    result, _ = rule.fn(correct_workflow.jobs["job-key"].steps[0])
-    assert result is True
-
-    result, _ = rule.fn(correct_workflow.jobs["job-key"].steps[1])
-    assert result is True
-
-    result, _ = rule.fn(correct_workflow.jobs["job-key"].steps[2])
-    assert result is True
-
-    result, _ = rule.fn(correct_workflow.jobs["job-key"].steps[3])
-    assert result is True
+@pytest.fixture(name="rule_no_internal_actions")
+def fixture_rule_no_internal_actions(settings_no_internal_actions):
+    return RuleStepUsesApproved(settings=settings_no_internal_actions)
 
 
-def test_rule_on_incorrect_workflow(rule, incorrect_workflow):
-    result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[0])
+def test_rule_on_unapproved_workflow(rule, unapproved_workflow):
+    result, message = rule.fn(unapproved_workflow.jobs["job-key"].steps[0])
     assert result is False
     assert "New Action detected" in message
 
-    result, message = rule.fn(incorrect_workflow.jobs["job-key"].steps[1])
+    result, message = rule.fn(unapproved_workflow.jobs["job-key"].steps[1])
+    assert result is False
+    assert "New Action detected" in message
+
+    result, message = rule.fn(unapproved_workflow.jobs["job-key"].steps[2])
     assert result is False
     assert "New Action detected" in message
 
 
-def test_fail_compatibility(rule, correct_workflow):
-    finding = rule.execute(correct_workflow)
+def test_rule_on_approved_workflow(rule, approved_workflow):
+    result, _ = rule.fn(approved_workflow.jobs["job-key"].steps[0])
+    assert result is True
+
+    result, _ = rule.fn(approved_workflow.jobs["job-key"].steps[1])
+    assert result is True
+
+    result, _ = rule.fn(approved_workflow.jobs["job-key"].steps[2])
+    assert result is True
+
+    result, _ = rule.fn(approved_workflow.jobs["job-key"].steps[3])
+    assert result is True
+
+    result, _ = rule.fn(approved_workflow.jobs["job-key"].steps[4])
+    assert result is True
+
+
+def test_rule_no_internal_actions_on_approved_workflow(
+    rule_no_internal_actions, approved_workflow
+):
+    result, _ = rule_no_internal_actions.fn(approved_workflow.jobs["job-key"].steps[0])
+    assert result is True
+
+    result, _ = rule_no_internal_actions.fn(approved_workflow.jobs["job-key"].steps[1])
+    assert result is False
+
+    result, _ = rule_no_internal_actions.fn(approved_workflow.jobs["job-key"].steps[2])
+    assert result is False
+
+    result, _ = rule_no_internal_actions.fn(approved_workflow.jobs["job-key"].steps[3])
+    assert result is True
+
+    result, _ = rule_no_internal_actions.fn(approved_workflow.jobs["job-key"].steps[4])
+    assert result is True
+
+
+def test_fail_compatibility(rule, approved_workflow):
+    finding = rule.execute(approved_workflow)
     assert "Workflow not compatible with" in finding.description
 
-    finding = rule.execute(correct_workflow.jobs["job-key"])
+    finding = rule.execute(approved_workflow.jobs["job-key"])
     assert "Job not compatible with" in finding.description
