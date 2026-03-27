@@ -178,7 +178,6 @@ and `src/github_actions_workflow_linter/default_settings.yaml` to make the rule 
 
 ### To-Do
 
-- [ ] Add feature to force pass any actions in GitHub Org (from `settings.yaml`)
 - [ ] Remove ActionLint command (should not be wrapped by `gawl`)
 - [ ] Add capability to expose lint level in `settings.yaml` for Rule Model
 - [ ] Add Rule to assert correct format for single line run
