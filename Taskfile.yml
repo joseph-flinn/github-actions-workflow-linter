@@ -7,6 +7,7 @@ tasks:
     silent: true
     cmds:
       - pipenv install --dev
+      - task: install
 
   fmt:
     silent: true
@@ -60,7 +61,7 @@ tasks:
 
   test:e2e:lint:
     cmds:
-      - pipenv run gawl lint --files tests/fixtures
+      - pipenv run gawl lint --files tests/fixtures/workflows
 
   test:e2e:lint:single:
     cmds:

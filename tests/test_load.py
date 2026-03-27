@@ -15,7 +15,7 @@ yaml = YAML()
 
 @pytest.fixture(name="workflow_filename")
 def fixture_workflow_filename():
-    return f"{FIXTURE_DIR}/test.yml"
+    return f"{FIXTURE_DIR}/workflows/test.yml"
 
 
 @pytest.fixture(name="simple_workflow_yaml")

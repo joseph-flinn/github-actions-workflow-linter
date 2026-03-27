@@ -9,9 +9,10 @@ from .conftest import FIXTURE_DIR
 from src.github_actions_workflow_linter.utils import (
     Action,
     Colors,
+    InternalActionsSettings,
     LintFinding,
     LintLevels,
-    Settings
+    Settings,
 )
 
 yaml = YAML()
@@ -19,12 +20,12 @@ yaml = YAML()
 
 @pytest.fixture(name="rules_settings_filename")
 def fixture_local_settings_rule():
-    return f"{FIXTURE_DIR}/test_rules_settings.yaml"
+    return f"{FIXTURE_DIR}/settings/test_rules_settings.yaml"
 
 
 @pytest.fixture(name="full_settings_filename")
 def fixture_local_settings_full():
-    return f"{FIXTURE_DIR}/test_full_settings.yaml"
+    return f"{FIXTURE_DIR}/settings/test_full_settings.yaml"
 
 
 def test_action_eq():
@@ -59,6 +60,19 @@ def test_lint_finding():
     assert str(error) == "\x1b[31merror\x1b[0m <no description>"
 
 
+def test_internal_action_settings():
+    ia_settings = InternalActionsSettings(
+        {"enabled": True, "org": "test-org", "repos": ["actions", "internal-actions"]}
+    )
+
+    assert ia_settings.enabled is True
+    assert len(ia_settings.repos) == 2
+    assert ia_settings.repos == [
+        "test-org/actions",
+        "test-org/internal-actions",
+    ]
+
+
 def test_settings_builder_default():
     settings = Settings.builder()
 
@@ -66,15 +80,17 @@ def test_settings_builder_default():
     assert len(settings.approved_actions) == 28
 
 
-def test_settings_builder_local_rules(rules_settings_filename: str):
+def test_settings_builder_local_rules_min(rules_settings_filename: str):
     settings = Settings.builder(settings_filename=rules_settings_filename)
 
     assert len(settings.enabled_rules) == 1
-    assert len(settings.approved_actions) == 28 #default actions
+    assert len(settings.approved_actions) == 28  # default actions
 
 
-def test_settings_builder_local_rules(full_settings_filename: str):
+def test_settings_builder_local_rules_full(full_settings_filename: str):
     settings = Settings.builder(settings_filename=full_settings_filename)
 
     assert len(settings.enabled_rules) == 1
     assert len(settings.approved_actions) == 2
+    assert settings.internal_actions.enabled is True
+    assert len(settings.internal_actions.repos) == 1

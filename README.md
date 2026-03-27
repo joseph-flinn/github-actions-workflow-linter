@@ -22,13 +22,31 @@ pip install -e .
 ```
 
 ## Usage
+### Notable Features
+
+- Styalistic linting to improve GitHub Action maintenance
+- Supply-chain attack protection
+  + Enables approved pinned versions of actions
+  + Enables easy updates to pinned versions
+  + Enables security audit/workflow for approved GitHub Action version updates
+  + Provides option to auto-approve internal actions (assuming best security practices)
 
 ### Setup settings.yaml
 
-If a non-default configuration is desired (different than `src/github_actions_workflow_linter/default_settings.yaml`), copy
-the below and create a `settings.yaml` in the directory that `gawl` will be running from.
+If a non-default configuration is desired (different than
+`src/github_actions_workflow_linter/default_settings.yaml`), create a `settings.yaml` in the
+directory that `gawl` will be running from.
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `enabled_rules` | `list` | Installed Python modules that follow the Rule model. Defaults are found in `github_actions_workflow_linter.rules`|
+| `approved_actions_path` | `string` | A path to the JSON file of approved actions, following `gawl`'s schema |
+| `internal_actions.enabled` | `bool` | Enable the "Internal Actions" feature behavior, granting more trust to org actions |
+| `internal_actions.org` | `string` | The name of the GitHub org from which to trust actions |
+| `internal_actions.repos` | `list` | The names of GitHub repos allowed for hosting internal actions |
 
 ```yaml
+# full_settings.yaml example
 enabled_rules:
     - github_actions_workflow_linter.rules.name_exists.RuleNameExists
     - github_actions_workflow_linter.rules.name_capitalized.RuleNameCapitalized
@@ -38,6 +56,11 @@ enabled_rules:
     - github_actions_workflow_linter.rules.underscore_outputs.RuleUnderscoreOutputs
 
 approved_actions_path: default_actions.json
+
+internal_actions:
+  enabled: True
+  org_name: "flinnsolutions"
+  repo_name: "gh-actions"
 ```
 
 ```
@@ -155,7 +178,7 @@ and `src/github_actions_workflow_linter/default_settings.yaml` to make the rule 
 
 ### To-Do
 
-- [ ] Upgrade all dependencies
 - [ ] Add feature to force pass any actions in GitHub Org (from `settings.yaml`)
-- [ ] Update Rule Model with configurable levels from `settings.yaml`
+- [ ] Remove ActionLint command (should not be wrapped by `gawl`)
+- [ ] Add capability to expose lint level in `settings.yaml` for Rule Model
 - [ ] Add Rule to assert correct format for single line run
