@@ -26,11 +26,13 @@ def fixture_settings():
                 "sha": "f44cd7b40bfd40b6aa1cc1b9b5b7bf03d3c67110",
             },
         },
-        internal_actions=InternalActionsSettings({
-            "enabled": True,
-            "org": "flinnsolutions",
-            "repos": ["gh-actions", "internal-actions"]
-        })
+        internal_actions=InternalActionsSettings(
+            {
+                "enabled": True,
+                "org": "flinnsolutions",
+                "repos": ["gh-actions", "internal-actions"],
+            }
+        ),
     )
 
 
@@ -149,8 +151,7 @@ def test_rule_on_approved_workflow(rule, approved_workflow):
 
 
 def test_rule_no_internal_actions_on_approved_workflow(
-    rule_no_internal_actions,
-    approved_workflow
+    rule_no_internal_actions, approved_workflow
 ):
     result, _ = rule_no_internal_actions.fn(approved_workflow.jobs["job-key"].steps[0])
     assert result is True
