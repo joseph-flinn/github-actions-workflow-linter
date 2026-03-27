@@ -73,7 +73,7 @@ class InternalActionsSettings:
 
     def __init__(self, internal_actions_settings: dict) -> None:
         self.enabled = internal_actions_settings.get("enabled", False)
-        org = internal_actions_settings["org"]
+        org = internal_actions_settings.get("org", "")
         self.repos = [
             f"{org}/{repo}" for repo in internal_actions_settings.get("repos", [])
         ]
