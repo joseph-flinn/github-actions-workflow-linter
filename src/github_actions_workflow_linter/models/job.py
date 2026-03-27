@@ -3,7 +3,7 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Self
 
-from dataclasses_json import config, dataclass_json, Undefined
+from dataclasses_json import config, dataclass_json, Undefined, DataClassJsonMixin
 from ruamel.yaml.comments import CommentedMap
 
 from .step import Step
@@ -11,7 +11,7 @@ from .step import Step
 
 @dataclass_json(undefined=Undefined.EXCLUDE)
 @dataclass
-class Job:
+class Job(DataClassJsonMixin):
     """Represents a job in a GitHub Action workflow.
 
     This object contains all of the data that is required to run the current linting
@@ -19,11 +19,11 @@ class Job:
     be added to this class to make it available for use in linting.
     """
 
+    key: str
     runs_on: Optional[str] = field(metadata=config(field_name="runs-on"), default=None)
-    key: Optional[str] = None
     name: Optional[str] = None
     env: Optional[CommentedMap] = None
-    steps: Optional[List[Step]] = None
+    steps: Optional[List[Step]] = field(default_factory=list)
     uses: Optional[str] = None
     uses_path: Optional[str] = None
     uses_ref: Optional[str] = None
@@ -32,15 +32,26 @@ class Job:
     )
     outputs: Optional[CommentedMap] = None
 
+    def __post_init__(self):
+        """Automatically parses the 'uses' string if it exists."""
+        if self.uses:
+            self.uses = self.uses.replace("\n", "").strip()
+            if "@" in self.uses:
+                parts = self.uses.split("@", 1)
+                self.uses_path = parts[0]
+                self.uses_ref = parts[1]
+
+
     @classmethod
-    def init(cls: Self, key: str, data: CommentedMap) -> Self:
+    def init(cls, key: str, data: CommentedMap) -> Self:
         """Custom dataclass constructor to map job data to a Job."""
         init_data = {
             "key": key,
-            "name": data["name"] if "name" in data else None,
-            "runs-on": data["runs-on"] if "runs-on" in data else None,
-            "env": data["env"] if "env" in data else None,
-            "outputs": data["outputs"] if "outputs" in data else None,
+            "name": data.get("name"),
+            "runs-on": data.get("runs-on"),
+            "env": data.get("env"),
+            "uses": data.get("uses"),
+            "outputs": data.get("outputs")
         }
 
         new_job = cls.from_dict(init_data)
@@ -50,9 +61,5 @@ class Job:
                 Step.init(idx, new_job.key, step_data)
                 for idx, step_data in enumerate(data["steps"])
             ]
-        else:
-            new_job.uses = data["uses"].replace("\n", "")
-            if "@" in new_job.uses:
-                new_job.uses_path, new_job.uses_ref = new_job.uses.split("@")
 
         return new_job

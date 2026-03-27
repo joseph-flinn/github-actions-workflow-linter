@@ -1,6 +1,6 @@
 """Base Rule class to build rules by extending."""
 
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Type, Union
 
 from .models.workflow import Workflow
 from .models.job import Job
@@ -18,7 +18,7 @@ class Rule:
     """Base class of a Rule to extend to create a linting Rule."""
 
     on_fail: LintLevels = LintLevels.ERROR
-    compatibility: List[Union[Workflow, Job, Step]] = [Workflow, Job, Step]
+    compatibility: List[Type[Union[Workflow, Job, Step]]] = [Workflow, Job, Step]
     settings: Optional[Settings] = None
 
     def fn(self, obj: Union[Workflow, Job, Step]) -> Tuple[bool, str]:
@@ -48,14 +48,12 @@ class Rule:
         Returns:
           The type specific failure message
         """
-        obj_type = type(obj)
-
-        if obj_type == Step:
-            return f"{obj_type.__name__} [{obj.job}.{obj.key}] => {message}"
-        elif obj_type == Job:
-            return f"{obj_type.__name__} [{obj.key}] => {message}"
+        if isinstance(obj, Step):
+            return f"Step [{obj.job}.{obj.key}] => {message}"
+        elif isinstance(obj, Job):
+            return f"Job [{obj.key}] => {message}"
         else:
-            return f"{obj_type.__name__} => {message}"
+            return f"{type(obj).__name__} => {message}"
 
     def execute(self, obj: Union[Workflow, Job, Step]) -> Union[LintFinding, None]:
         """Wrapper function to execute the overridden self.fn().

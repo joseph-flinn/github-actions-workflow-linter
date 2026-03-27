@@ -1,9 +1,9 @@
 """Representation for an entire GitHub Action workflow."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, Optional, Self
 
-from dataclasses_json import dataclass_json, Undefined
+from dataclasses_json import dataclass_json, Undefined, DataClassJsonMixin
 from ruamel.yaml.comments import CommentedMap
 
 from .job import Job
@@ -11,7 +11,7 @@ from .job import Job
 
 @dataclass_json(undefined=Undefined.EXCLUDE)
 @dataclass
-class Workflow:
+class Workflow(DataClassJsonMixin):
     """Represents an entire workflow in a GitHub Action workflow.
 
     This object contains all of the data that is required to run the current linting
@@ -22,19 +22,19 @@ class Workflow:
     one-to-one in the model (ex. 'with' => 'uses_with')
     """
 
+    on: CommentedMap
+    filename: Optional[str] = ""
+    jobs: Optional[Dict[str, Job]] = field(default_factory=dict)
     key: str = ""
-    filename: Optional[str] = None
     name: Optional[str] = None
-    on: Optional[CommentedMap] = None
-    jobs: Optional[Dict[str, Job]] = None
 
     @classmethod
-    def init(cls: Self, key: str, filename: str, data: CommentedMap) -> Self:
+    def init(cls, key: str, filename: str, data: CommentedMap) -> Self:
         init_data = {
             "key": key,
             "filename": filename,
+            "on": data["on"],
             "name": data["name"] if "name" in data else None,
-            "on": data["on"] if "on" in data else None,
         }
 
         new_workflow = cls.from_dict(init_data)

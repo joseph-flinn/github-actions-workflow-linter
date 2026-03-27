@@ -19,6 +19,7 @@ pylint = "*"
 pytype = "*"
 hatchling = "*"
 build = "*"
+pyright = "*"
 
 [requires]
 python_version = "3.14"

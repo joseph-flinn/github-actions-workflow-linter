@@ -27,7 +27,12 @@ tasks:
   type:
     silent: true
     cmds:
-      - pipenv run pytype src
+      - pipenv run pyright src
+
+  type:single:
+    silent: true
+    cmds:
+      - pipenv run pyright {{.CLI_ARGS}}
 
   update:
     silent: true

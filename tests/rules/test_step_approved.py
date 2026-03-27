@@ -6,7 +6,7 @@ from ruamel.yaml import YAML
 
 from src.github_actions_workflow_linter.load import WorkflowBuilder
 from src.github_actions_workflow_linter.rules.step_approved import RuleStepUsesApproved
-from src.github_actions_workflow_linter.utils import InternalActionsSettings, Settings
+from src.github_actions_workflow_linter.utils import Settings
 
 yaml = YAML()
 
@@ -26,13 +26,11 @@ def fixture_settings():
                 "sha": "f44cd7b40bfd40b6aa1cc1b9b5b7bf03d3c67110",
             },
         },
-        internal_actions=InternalActionsSettings(
-            {
-                "enabled": True,
-                "org": "flinnsolutions",
-                "repos": ["gh-actions", "internal-actions"],
-            }
-        ),
+        internal_actions={
+            "enabled": True,
+            "org": "flinnsolutions",
+            "repos": ["gh-actions", "internal-actions"],
+        }
     )
 
 

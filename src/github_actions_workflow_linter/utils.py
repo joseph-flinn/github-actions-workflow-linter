@@ -6,7 +6,7 @@ import os
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional, Self, TypeVar
+from typing import Any, Optional, Self, TypeVar
 
 from ruamel.yaml import YAML
 
@@ -21,7 +21,7 @@ class Action:
     version: str = ""
     sha: str = ""
 
-    def __eq__(self, other: Self) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Override Action equality.
 
         Args:
@@ -31,23 +31,14 @@ class Action:
         Return
           The state of equality
         """
+        if not isinstance(other, Action):
+            return NotImplemented
+
         return (
             self.name == other.name
             and self.version == other.version
             and self.sha == other.sha
         )
-
-    def __ne__(self, other: Self) -> bool:
-        """Override Action unequality.
-
-        Args:
-          other:
-            Another Action type object to compare
-
-        Return
-          The negation of the state of equality
-        """
-        return not self.__eq__(other)
 
 
 @dataclass
@@ -84,7 +75,7 @@ class LintLevel:
     """Class to contain the numeric level and color of linting."""
 
     code: int
-    color: Colors
+    color: str
 
 
 class LintLevels(LintLevel, Enum):
@@ -134,7 +125,7 @@ class Settings:
         self,
         enabled_rules: Optional[list[str]] = None,
         approved_actions: Optional[dict[str, dict[str, str]]] = None,
-        internal_actions: InternalActionsSettings = None,
+        internal_actions: Optional[dict[str, Any]] = None,
     ) -> None:
         """Settings object that can be overridden in settings.py.
 
@@ -153,19 +144,19 @@ class Settings:
             approved_actions = {}
 
         if internal_actions is None:
-            internal_actions = InternalActionsSettings({})
+            internal_actions = {}
 
         self.enabled_rules = enabled_rules
         self.approved_actions = {
             name: Action(**action) for name, action in approved_actions.items()
         }
-        self.internal_actions = internal_actions
+        self.internal_actions = InternalActionsSettings(internal_actions)
 
     @classmethod
     def builder(
         cls,
         settings_filename: str = "settings.yaml",
-    ) -> SettingsFromBuilder:
+    ) -> Self:
         """
         Build a Settings object.
 
@@ -203,10 +194,8 @@ class Settings:
             ) as action_file:
                 settings["approved_actions"] = json.load(action_file)
 
-        # Build the class
-        cls.enabled_rules = settings.get("enabled_rules", [])
-        cls.approved_actions = settings.get("approved_actions", {})
-        cls.internal_actions = InternalActionsSettings(
-            settings.get("internal_actions", {})
+        return cls(
+            enabled_rules=settings.get("enabled_rules", []),
+            approved_actions=settings.get("approved_actions", {}),
+            internal_actions= settings.get("internal_actions", {})
         )
-        return cls

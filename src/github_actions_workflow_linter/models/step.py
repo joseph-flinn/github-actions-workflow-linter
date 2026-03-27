@@ -3,13 +3,13 @@
 from dataclasses import dataclass, field
 from typing import Optional, Self
 
-from dataclasses_json import config, dataclass_json, Undefined
+from dataclasses_json import config, dataclass_json, Undefined, DataClassJsonMixin
 from ruamel.yaml.comments import CommentedMap
 
 
 @dataclass_json(undefined=Undefined.EXCLUDE)
 @dataclass
-class Step:
+class Step(DataClassJsonMixin):
     """Represents a step in a GitHub Action workflow job.
 
     This object contains all of the data that is required to run the current linting
@@ -17,8 +17,8 @@ class Step:
     be added to this class to make it available for use in linting.
     """
 
-    key: Optional[int] = None
-    job: Optional[str] = None
+    key: int
+    job: str
     name: Optional[str] = None
     env: Optional[CommentedMap] = None
     uses: Optional[str] = None
@@ -31,21 +31,32 @@ class Step:
     )
     run: Optional[str] = None
 
+    def __post_init__(self):
+        """Automatically parses optional data."""
+
+        if self.uses:
+            if "@" in self.uses:
+                parts = self.uses.split("@", 1)
+                self.uses_path = parts[0]
+                self.uses_ref = parts[1]
+        if self.uses_comment:
+            self.uses_version = self.uses_comment.split(" ")[-1]
+
+
     @classmethod
-    def init(cls: Self, idx: int, job: str, data: CommentedMap) -> Self:
+    def init(cls, idx: int, job: str, data: CommentedMap) -> Self:
         """Custom dataclass constructor to map a job step data to a Step."""
-        new_step = cls.from_dict(data)
+        init_data = {
+            "key": idx,
+            "job": job,
+            **data
+        }
 
-        new_step.key = idx
-        new_step.job = job
-
-        if new_step.uses:
+        if "uses" in data:
             if "uses" in data.ca.items and data.ca.items["uses"][2]:
-                new_step.uses_comment = data.ca.items["uses"][2].value.replace("\n", "")
-                new_step.uses_version = new_step.uses_comment.split(" ")[-1]
-            if "@" in new_step.uses:
-                new_step.uses_path, new_step.uses_ref = new_step.uses.split("@")
+                init_data["uses_comment"] = data.ca.items["uses"][2].value.replace("\n", "")
+                init_data["uses_version"] = init_data["uses_comment"].split(" ")[-1]
             else:
-                new_step.uses_path = new_step.uses
+                init_data["uses_path"] = data["uses"]
 
-        return new_step
+        return cls.from_dict(init_data)

@@ -76,6 +76,8 @@ def test_internal_action_settings():
 def test_settings_builder_default():
     settings = Settings.builder()
 
+    print(type(settings))
+
     assert len(settings.enabled_rules) == 6
     assert len(settings.approved_actions) == 28
 
