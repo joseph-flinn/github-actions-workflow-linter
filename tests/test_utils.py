@@ -73,6 +73,14 @@ def test_internal_action_settings():
     ]
 
 
+def test_no_internal_action_settings():
+    ia_settings = InternalActionsSettings({})
+
+    assert ia_settings.enabled is False
+    assert len(ia_settings.repos) == 0
+    assert ia_settings.repos == []
+
+
 def test_settings_builder_default():
     settings = Settings.builder()
 
